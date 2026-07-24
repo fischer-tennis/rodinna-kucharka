@@ -9,6 +9,7 @@ const categoryChips = document.getElementById('categoryChips');
 const featuredRecipe = document.getElementById('featuredRecipe');
 const infoDialog = document.getElementById('infoDialog');
 const favorites = new Set(JSON.parse(localStorage.getItem('rodinnaKucharkaFavorites') || '[]'));
+const recipeEdits = JSON.parse(localStorage.getItem('rodinnaKucharkaRecipeEdits') || '{}');
 let activeCategory = '';
 let activeView = 'home';
 
@@ -26,7 +27,14 @@ fetch('recipes.json')
 
 function esc(value=''){return String(value).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function saveFavorites(){localStorage.setItem('rodinnaKucharkaFavorites',JSON.stringify([...favorites]));}
+function saveRecipeEdits(){localStorage.setItem('rodinnaKucharkaRecipeEdits',JSON.stringify(recipeEdits));}
 function iconFor(category){return categoryIcons[category] || '📖';}
+function authorFor(r){
+  const edited = recipeEdits[r.id]?.author;
+  if (typeof edited === 'string' && edited.trim()) return edited.trim();
+  return r.author && r.author !== 'Autor ze sešitu' ? r.author : '';
+}
+function isConfirmed(r){return recipeEdits[r.id]?.confirmed === true;}
 
 function buildCategories(){
   const categories=[...new Set(recipes.map(r=>r.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'sk'));
@@ -58,7 +66,7 @@ function renderFeatured(){
 function filteredRecipes(){
   const q=search.value.toLocaleLowerCase('sk').trim();
   return recipes.filter(r=>{
-    const hay=[r.name,r.author,r.category,...(r.ingredients||[]),r.method].join(' ').toLocaleLowerCase('sk');
+    const hay=[r.name,authorFor(r),r.category,...(r.ingredients||[]),r.method].join(' ').toLocaleLowerCase('sk');
     return (!q||hay.includes(q)) && (!activeCategory||r.category===activeCategory) && (activeView!=='favorites'||favorites.has(r.id));
   });
 }
@@ -68,13 +76,17 @@ function render(){
   document.getElementById('stats').textContent=`${filtered.length} z ${recipes.length} receptov`;
   clearBtn.hidden=!(search.value||activeCategory||activeView==='favorites');
   empty.hidden=filtered.length!==0;
-  cards.innerHTML=filtered.map(r=>`<article class="recipe-card" onclick="openRecipe('${esc(r.id)}')">
-    <div class="recipe-thumb" style="background-image:url('images/${encodeURIComponent(r.source)}')">
-      <span class="category-badge">${iconFor(r.category)} ${esc(r.category)}</span>
-      <button class="favorite ${favorites.has(r.id)?'on':''}" onclick="toggleFavorite('${esc(r.id)}',event)" aria-label="Obľúbené">${favorites.has(r.id)?'♥':'♡'}</button>
-    </div>
-    <div class="recipe-body"><h3>${esc(r.name)}</h3><div class="recipe-meta">${r.time?`<span>⏱ ${esc(r.time)}</span>`:''}${r.temperature?`<span>🔥 ${esc(r.temperature)}</span>`:''}<span>${r.author&&r.author!=='Autor ze sešitu'?`👤 ${esc(r.author)}`:'📖 Rodinný recept'}</span></div>${r.status?`<div class="recipe-status">${esc(r.status)}</div>`:''}</div>
-  </article>`).join('');
+  cards.innerHTML=filtered.map(r=>{
+    const author=authorFor(r);
+    const confirmed=isConfirmed(r);
+    return `<article class="recipe-card" onclick="openRecipe('${esc(r.id)}')">
+      <div class="recipe-thumb" style="background-image:url('images/${encodeURIComponent(r.source)}')">
+        <span class="category-badge">${iconFor(r.category)} ${esc(r.category)}</span>
+        <button class="favorite ${favorites.has(r.id)?'on':''}" onclick="toggleFavorite('${esc(r.id)}',event)" aria-label="Obľúbené">${favorites.has(r.id)?'♥':'♡'}</button>
+      </div>
+      <div class="recipe-body"><h3>${esc(r.name)}</h3><div class="recipe-meta">${r.time?`<span>⏱ ${esc(r.time)}</span>`:''}${r.temperature?`<span>🔥 ${esc(r.temperature)}</span>`:''}<span>${author?`👤 ${esc(author)}`:'👤 Autor nezadaný'}</span></div><div class="recipe-status ${confirmed?'confirmed':'pending'}">${confirmed?'✓ Skontrolovaný recept':'○ Čaká na kontrolu'}</div></div>
+    </article>`;
+  }).join('');
 }
 
 function toggleFavorite(id,event){event?.stopPropagation();favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();render();if(detail.open)openRecipe(id);}
@@ -110,12 +122,40 @@ function updateNavigation(view){document.querySelectorAll('.nav-item').forEach(b
 
 function openRecipe(id){
   const r=recipes.find(x=>x.id===id); if(!r)return;
+  const author=authorFor(r);
+  const confirmed=isConfirmed(r);
   detailContent.innerHTML=`<div class="detail-hero" style="background-image:url('images/${encodeURIComponent(r.source)}')"><div class="detail-title"><span>${iconFor(r.category)} ${esc(r.category)}</span><h2>${esc(r.name)}</h2></div></div>
-  <div class="detail-content"><div class="detail-actions">${r.author?`<span class="pill">👤 ${esc(r.author)}</span>`:''}${r.temperature?`<span class="pill">🔥 ${esc(r.temperature)}</span>`:''}${r.time?`<span class="pill">⏱ ${esc(r.time)}</span>`:''}<button class="detail-fav ${favorites.has(r.id)?'on':''}" onclick="toggleFavorite('${esc(r.id)}',event)">${favorites.has(r.id)?'♥ Uložené':'♡ Obľúbené'}</button></div>
-  ${r.status?`<div class="note">${esc(r.status)}${/overovať|kontrol/i.test(r.status)?' – nejasné miesta postupne overíme podľa originálu.':''}</div>`:''}
+  <div class="detail-content"><div class="detail-actions">${author?`<span class="pill">👤 ${esc(author)}</span>`:'<span class="pill">👤 Autor nezadaný</span>'}${r.temperature?`<span class="pill">🔥 ${esc(r.temperature)}</span>`:''}${r.time?`<span class="pill">⏱ ${esc(r.time)}</span>`:''}<button class="detail-fav ${favorites.has(r.id)?'on':''}" onclick="toggleFavorite('${esc(r.id)}',event)">${favorites.has(r.id)?'♥ Uložené':'♡ Obľúbené'}</button></div>
+  <section class="recipe-review ${confirmed?'is-confirmed':''}">
+    <div class="review-heading"><div><span>Kontrola receptu</span><h3>${confirmed?'Recept je skontrolovaný':'Recept čaká na kontrolu'}</h3></div><div class="review-state">${confirmed?'✓':'○'}</div></div>
+    <label class="review-check"><input id="confirmed-${esc(r.id)}" type="checkbox" ${confirmed?'checked':''}><span>Potvrdzujem, že recept je správne prepísaný podľa originálu.</span></label>
+    <label class="author-label" for="author-${esc(r.id)}">Autor receptu</label>
+    <div class="author-editor"><input id="author-${esc(r.id)}" type="text" value="${esc(author)}" placeholder="Napísať meno autora"><button type="button" id="save-${esc(r.id)}">Uložiť</button></div>
+    <p class="save-message" id="message-${esc(r.id)}" aria-live="polite"></p>
+  </section>
+  ${!confirmed && r.status?`<div class="note">${esc(r.status)}${/overovať|kontrol/i.test(r.status)?' – nejasné miesta postupne overíme podľa originálu.':''}</div>`:''}
   <div class="detail-columns"><div><h3>Suroviny</h3><ul>${(r.ingredients||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul><h3>Postup</h3><p>${esc(r.method||'Postup zatiaľ nie je prepísaný.')}</p></div><div><h3>Pôvodná stránka zo zošita</h3><img class="source" src="images/${encodeURIComponent(r.source)}" alt="Originálny recept ${esc(r.name)}"></div></div></div>`;
   detail.showModal();
+  document.getElementById(`save-${r.id}`).addEventListener('click',()=>saveRecipeReview(r.id));
+  document.getElementById(`confirmed-${r.id}`).addEventListener('change',()=>saveRecipeReview(r.id));
+  document.getElementById(`author-${r.id}`).addEventListener('keydown',e=>{if(e.key==='Enter')saveRecipeReview(r.id);});
 }
+
+function saveRecipeReview(id){
+  const r=recipes.find(x=>x.id===id); if(!r)return;
+  const authorInput=document.getElementById(`author-${id}`);
+  const confirmedInput=document.getElementById(`confirmed-${id}`);
+  const message=document.getElementById(`message-${id}`);
+  recipeEdits[id]={
+    author:authorInput.value.trim(),
+    confirmed:confirmedInput.checked
+  };
+  saveRecipeEdits();
+  message.textContent='Uložené v tomto zariadení.';
+  render();
+  setTimeout(()=>openRecipe(id),350);
+}
+
 window.openRecipe=openRecipe;window.toggleFavorite=toggleFavorite;
 document.querySelector('#detail .close').addEventListener('click',()=>detail.close());
 detail.addEventListener('click',e=>{if(e.target===detail)detail.close();});
