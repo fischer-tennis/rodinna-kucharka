@@ -1,10 +1,8 @@
 const SUPABASE_URL = 'https://mbgdesaueodahxwmydnn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_lNHmPFBuqHZYcKov9QmprQ_oIq1Jry9';
 const supabaseClient = window.supabase;
-if (!supabaseClient?.createClient) {
-  throw new Error('Knižnica Supabase sa nenačítala. Skontroluj internetové pripojenie a obnov stránku.');
-}
-const supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY);
+const cloudAvailable = Boolean(supabaseClient && typeof supabaseClient.createClient === 'function');
+const supabase = cloudAvailable ? supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 let recipes = [], localRecipes = [], installPrompt, currentUser = null, confirmations = [];
 const cards = document.getElementById('cards');
@@ -36,7 +34,6 @@ function closeDialog(dialog) {
 
 const categoryIcons = {'Kynuté a pečivo':'🥐','Chléb a pečivo':'🍞','Vánoční cukroví':'🍪','Dezerty':'🍮','Zákusky':'🍰','Dorty':'🎂','Polévky':'🥣','Hlavní jídla':'🍲','Nepečené':'🍫'};
 
-window.addEventListener('load', () => setTimeout(() => document.getElementById('splash').classList.add('hide'), 500));
 const esc=(v='')=>String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const iconFor=c=>categoryIcons[c]||'📖';
 const saveFavorites=()=>localStorage.setItem('rodinnaKucharkaFavorites',JSON.stringify([...favorites]));
@@ -46,13 +43,41 @@ const confirmationCount=id=>confirmations.filter(c=>c.recipe_id===id).length;
 const confirmedByMe=id=>currentUser&&confirmations.some(c=>c.recipe_id===id&&c.user_id===currentUser.id);
 
 async function init(){
-  const localRes=await fetch('recipes.json'); localRecipes=await localRes.json();
-  const {data:{session}}=await supabase.auth.getSession(); currentUser=session?.user||null;
-  supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null; updateAccountUI(); loadCloudData();});
-  updateAccountUI(); await loadCloudData(); subscribeRealtime();
+  try {
+    const localRes = await fetch('recipes.json', {cache:'no-store'});
+    localRecipes = await localRes.json();
+  } catch (error) {
+    console.error('Nepodarilo sa načítať miestne recepty:', error);
+    localRecipes = [];
+  }
+
+  if (!cloudAvailable) {
+    recipes = localRecipes.map(normalizeLocal);
+    confirmations = [];
+    updateAccountUI();
+    buildCategories();
+    renderFeatured();
+    render();
+    accountBtn.addEventListener('click', () => {
+      alert('Cloudové prihlásenie sa nenačítalo. Skontroluj internet a obnov stránku. Miestne recepty však môžeš prezerať.');
+    }, { once: true });
+    return;
+  }
+
+  const {data:{session}} = await supabase.auth.getSession();
+  currentUser = session?.user || null;
+  supabase.auth.onAuthStateChange((_event,session)=>{
+    currentUser=session?.user||null;
+    updateAccountUI();
+    loadCloudData();
+  });
+  updateAccountUI();
+  await loadCloudData();
+  subscribeRealtime();
 }
 
 async function loadCloudData(){
+  if (!supabase) { recipes=localRecipes.map(normalizeLocal); confirmations=[]; buildCategories(); renderFeatured(); render(); return; }
   const [{data:cloud,error},{data:conf}] = await Promise.all([
     supabase.from('recipes').select('*').order('created_at',{ascending:false}),
     supabase.from('recipe_confirmations').select('*')
@@ -62,6 +87,7 @@ async function loadCloudData(){
 }
 function normalizeLocal(r){return {...r,title:r.name,author_name:r.author,ingredients:r.ingredients||[],instructions:r.method||'',notebook_image_url:r.source?`images/${r.source}`:null,is_local:true};}
 function subscribeRealtime(){
+  if (!supabase) return;
   supabase.channel('kucharka-zmeny')
    .on('postgres_changes',{event:'*',schema:'public',table:'recipes'},()=>loadCloudData())
    .on('postgres_changes',{event:'*',schema:'public',table:'recipe_confirmations'},()=>loadCloudData())
@@ -102,5 +128,15 @@ document.getElementById('installBtn').onclick=async()=>{
   if(installPrompt){installPrompt.prompt();const result=await installPrompt.userChoice;installPrompt=null;if(result.outcome==='accepted')document.getElementById('installBtn').hidden=true;return;}
   alert('V prehliadači Chrome otvor menu ⋮ a zvoľ „Pridať na plochu“ alebo „Nainštalovať aplikáciu“.');
 };
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
-init().catch(err=>{console.error(err);cards.innerHTML='<p>Nepodarilo sa spustiť aplikáciu.</p>';});
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(console.error));
+
+function startApp(){
+  init().catch(err=>{
+    console.error(err);
+    const splash=document.getElementById('splash');
+    if(splash) splash.classList.add('hide');
+    cards.innerHTML='<p>Nepodarilo sa úplne spustiť cloudové funkcie. Obnov stránku alebo skontroluj internetové pripojenie.</p>';
+  });
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',startApp,{once:true});
+else startApp();

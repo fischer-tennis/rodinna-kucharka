@@ -1,26 +1,5 @@
-RODINNÁ KUCHAŘKA – VERZE 0.1
+Rodinná kuchárka – verzia 1.1.2 Cloud
 
-Obsah:
-- 33 prvních receptů přepsaných do databáze
-- fotografie původních stran
-- vyhledávání a filtrování podle kategorií
-- detail receptu a zobrazení originálu
-- základ pro instalovatelnou webovou aplikaci (PWA)
+Oprava: úvodná obrazovka sa už nezasekne pri pomalom alebo zablokovanom načítaní Supabase. Aplikácia sa otvorí aj v núdzovom režime s miestnymi receptami.
 
-Důležité:
-Přepisy jsou zatím označené „Přepis ke kontrole“. U některých rukopisných údajů
-může být potřeba ověření. Autor je zatím většinou uveden jako „Autor ze sešitu“,
-dokud nebude doplněno přesné jméno.
-
-Spuštění:
-Nahrajte celý obsah složky na webový hosting. Pro místní test lze použít jednoduchý
-lokální webový server. Pouhé otevření index.html funguje v některých prohlížečích
-omezeně, protože se načítá soubor recipes.json.
-
-
-VERZIA 1.1.1 CLOUD – OPRAVA MOBILU
-- opravené prihlásenie na Android zariadeniach
-- Supabase sa načítava kompatibilnejším spôsobom
-- doplnené náhradné otvorenie dialógov
-- opravené tlačidlo inštalácie PWA
-- aktualizovaná cache service workera
+Nahraj všetky súbory do koreňa GitHub repozitára. SQL netreba spúšťať znova.
