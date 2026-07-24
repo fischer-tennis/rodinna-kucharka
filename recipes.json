@@ -1,0 +1,659 @@
+[
+  {
+    "id": "R001",
+    "name": "Dukátové buchtičky",
+    "category": "Kynuté a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "1 kg polohrubé mouky",
+      "1 droždí",
+      "150 g cukru",
+      "1 lžička soli",
+      "1 vanilka",
+      "600 ml mléka",
+      "150 g másla"
+    ],
+    "method": "Vypracovat kynuté těsto, vytvarovat malé buchtičky a upéct.",
+    "temperature": "200 °C",
+    "time": "15–20 min",
+    "source": "1000054662.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R002",
+    "name": "Šišky",
+    "category": "Kynuté a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "600 g hladké mouky",
+      "160 g moučkového cukru",
+      "350 ml mléka",
+      "50 g másla",
+      "1 vejce",
+      "50 ml rumu",
+      "1 droždí",
+      "1 PL cukru",
+      "1 ČL soli"
+    ],
+    "method": "Vypracovat těsto, nechat vykynout, vytvarovat šišky a smažit.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054662.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R003",
+    "name": "Palačinky",
+    "category": "Dezerty",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "600 ml mléka",
+      "400 g hladké mouky",
+      "2 vejce",
+      "sůl",
+      "2 PL krystalového cukru",
+      "2 dl oleje",
+      "2 dl vroucí vody"
+    ],
+    "method": "Všechny suroviny pořádně vymíchat a péct palačinky na pánvi.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054662.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R004",
+    "name": "Plněné oříšky",
+    "category": "Vánoční cukroví",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "300 g hladké mouky",
+      "150 g moučkového cukru",
+      "200 g másla",
+      "100 g vlašských ořechů",
+      "1 ČL kakaa"
+    ],
+    "method": "Vypracovat těsto, nechat odpočinout a péct ve formičkách. Plnit krémem z mléka, žloutku, másla, cukru a vanilky.",
+    "temperature": "180 °C",
+    "time": "asi 12 min",
+    "source": "1000054663.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R005",
+    "name": "Žemle",
+    "category": "Chléb a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "500 g hladké mouky",
+      "300 ml vody",
+      "30 g másla",
+      "21 g čerstvého droždí",
+      "1 ČL cukru",
+      "1,5 ČL soli"
+    ],
+    "method": "Vypracovat těsto, nechat asi 1 hodinu kynout, vytvarovat žemle a upéct.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054663.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R006",
+    "name": "Pudingoše",
+    "category": "Kynuté a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "1 kg hladké mouky",
+      "2 droždí",
+      "1 prášek do pečiva",
+      "100 g moučkového cukru",
+      "1,5 dl oleje",
+      "4 dl mléka",
+      "1 lžička soli",
+      "sníh ze 3 bílků"
+    ],
+    "method": "Těsto rozdělit na 6 částí, každou potřít pudingem, udělat záviny a splést po dvou jako vánočku.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054665.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R007",
+    "name": "Věnečky",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "300 ml vody",
+      "150 g Hery",
+      "špetka soli",
+      "150 g hladké mouky"
+    ],
+    "method": "Suroviny svařit na odpalované těsto, odpalovat 3–4 minuty a rozšlehat. Vytvarovat věnečky a upéct.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054665.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R008",
+    "name": "Žloutkové řezy plněné",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "200 g hladké mouky",
+      "130 g smetolu",
+      "70 g moučkového cukru",
+      "1/2 balíčku prášku do pečiva",
+      "1 vejce"
+    ],
+    "method": "Vypracovat těsto, rozdělit na pláty, upéct a plnit ořechovým krémem. Polít žloutkovou polevou.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054664.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R009",
+    "name": "Hrnečkový chléb",
+    "category": "Chléb a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "3 hrnky hladké mouky",
+      "1,5 hrnku vody",
+      "2 malé lžičky soli",
+      "1 sušené droždí"
+    ],
+    "method": "Vše smíchat, nechat přes noc v míse kynout. Ráno přeložit, udělat bochník, dát do horké nádoby, péct zakryté 20 minut a odkryté dalších 20 minut.",
+    "temperature": "",
+    "time": "40 min",
+    "source": "1000054644.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R010",
+    "name": "Kysnuté cesto od Kedovej",
+    "category": "Kynuté a pečivo",
+    "author": "Kedová",
+    "ingredients": [
+      "1 kg hladké mouky",
+      "9 vajec",
+      "1 PL cukru",
+      "1 droždí",
+      "1 KL soli",
+      "1 dl oleje",
+      "600 ml mléka"
+    ],
+    "method": "Vypracovat kynuté těsto. V sešitě uvedeno využití na záviny a šunkové pečivo.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054644.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R011",
+    "name": "Záviny – rožky od Kedovej",
+    "category": "Kynuté a pečivo",
+    "author": "Kedová",
+    "ingredients": [
+      "1/2 kg polohrubé mouky",
+      "1 droždí",
+      "1 prášek do pečiva",
+      "40 g cukru",
+      "1 dl oleje",
+      "10 sacharinů",
+      "1/2 lžičky soli",
+      "1 žloutek",
+      "3–4 dl mléka"
+    ],
+    "method": "Vypracovat těsto, vytvarovat záviny nebo rožky a upéct.",
+    "temperature": "170 °C",
+    "time": "20–25 min",
+    "source": "1000054644.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R012",
+    "name": "Kváskový chléb od Kedovej",
+    "category": "Chléb a pečivo",
+    "author": "Kedová",
+    "ingredients": [
+      "Rozkvas: 180 g žitné mouky",
+      "180 g vody",
+      "Těsto: 820 g hladké mouky",
+      "26 g soli",
+      "450 g vody",
+      "340 g vařených brambor"
+    ],
+    "method": "Rozkvas nechat 12 hodin. Těsto vymíchat, po 1,5 hodině přeložit a pokračovat podle původního receptu.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054645.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R013",
+    "name": "Nemíchaný turbo chléb",
+    "category": "Chléb a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "500 g hladké mouky",
+      "300 ml vody",
+      "2 polévkové lžíce kvásku",
+      "2 ČL soli",
+      "1 ČL kmínu"
+    ],
+    "method": "Kvásek s moukou a vodou zamíchat, nechat 2 hodiny odpočívat, přidat sůl a kmín. Během kynutí několikrát přeložit, stočit do ošatky a nechat 2–3 hodiny kynout.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054645.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R014",
+    "name": "Pascha – velká noc",
+    "category": "Velikonoce",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "1 kg polohrubé mouky",
+      "500 ml mléka",
+      "1 kostka droždí",
+      "1 prášek do pečiva",
+      "180 g práškového cukru",
+      "1 vanilka",
+      "1 vejce",
+      "1 ČL soli",
+      "2 PL sušeného mléka",
+      "65 g másla"
+    ],
+    "method": "Vypracovat kynuté těsto, nechat vykynout, vytvarovat a upéct.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054645.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R015",
+    "name": "Škvarkové pagáče",
+    "category": "Slané pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "350 g hladké mouky",
+      "35 g masti",
+      "15 g čerstvého droždí",
+      "2 dl mléka",
+      "1–2 ČL soli",
+      "250 g škvarků"
+    ],
+    "method": "Těsto nenechávat kynout. Hned rozválet, potřít škvarky, udělat závin a dát do lednice. Opakovat 2×.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054646.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R016",
+    "name": "Parené buchty",
+    "category": "Kynuté a pečivo",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "600 g polohrubé mouky",
+      "1 droždí",
+      "400 ml mléka",
+      "30 g cukru",
+      "trochu soli"
+    ],
+    "method": "Vypracovat těsto, naplnit a pařit přibližně 10 minut.",
+    "temperature": "",
+    "time": "10 min",
+    "source": "1000054647.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R017",
+    "name": "Perníčky od Kedovej",
+    "category": "Vánoční cukroví",
+    "author": "Kedová",
+    "ingredients": [
+      "1/2 kg hladké mouky",
+      "4 PL medu",
+      "250 g moučkového cukru",
+      "1 ČL sody",
+      "150 g margarínu",
+      "1 perníkové koření",
+      "3 vejce"
+    ],
+    "method": "Vypracovat těsto, nechat v chladničce do druhého dne, rozválet a vykrajovat. Po upečení potřít mlékem.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054648.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R018",
+    "name": "Linecké kolieska",
+    "category": "Vánoční cukroví",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "300 g hladké mouky",
+      "200 g margarínu",
+      "100 g moučkového cukru",
+      "trochu skořice",
+      "kůra z citronu",
+      "1/2 prášku do pečiva",
+      "1 žloutek"
+    ],
+    "method": "Vypracovat těsto, rozválet, vykrajovat kolečka a upéct. Slepit marmeládou.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054649.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R019",
+    "name": "Vanilkové rožky",
+    "category": "Vánoční cukroví",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "250 g margarínu",
+      "150 g mletých ořechů",
+      "100 g moučkového cukru",
+      "300 g hladké mouky"
+    ],
+    "method": "Vypracovat těsto, tvarovat rožky a péct.",
+    "temperature": "150 °C",
+    "time": "20 min",
+    "source": "1000054649.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R020",
+    "name": "Nepečené Zebra řezy",
+    "category": "Nepečené",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "230 g sušeného mléka",
+      "250 g kokosu",
+      "230 g moučkového cukru",
+      "380 g krystalového cukru",
+      "230 ml vody",
+      "3 pláty čokolády"
+    ],
+    "method": "Připravit světlou a tmavou hmotu, vrstvit do zebrového vzoru a nechat ztuhnout.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054649.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R021",
+    "name": "Marlenka",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "3 vejce",
+      "3 PL medu",
+      "250 g moučkového cukru",
+      "400 g hladké mouky",
+      "1 ČL sody",
+      "250 g rozpuštěného másla"
+    ],
+    "method": "Vypracovat těsto na pláty. Plnit karamelovým krémem z mléka, žloutku, másla a karamelového salka.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054658.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R022",
+    "name": "Grilážky",
+    "category": "Nepečené",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "250 g krystalového cukru",
+      "250 g margarínu",
+      "1 Salko",
+      "250–300 g mletých ořechů"
+    ],
+    "method": "Cukr rozpustit, přidat margarín, Salko a ořechy. Hmotou plnit oplatky.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054657.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R023",
+    "name": "Burizonové guľky",
+    "category": "Nepečené",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "300 g krystalového cukru",
+      "250 g margarínu",
+      "1 Salko",
+      "2 balíčky burizonů"
+    ],
+    "method": "Cukr rozpustit na karamel, přidat margarín a Salko. Vmíchat burizony a tvořit kuličky.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054657.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R024",
+    "name": "Tvarohový krémeš",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "Těsto: 300 g polohrubé mouky",
+      "150 g moučkového cukru",
+      "150 g margarínu",
+      "1/2 prášku do pečiva",
+      "1 vejce",
+      "1 žloutek",
+      "Plnka: 500 g tvarohu",
+      "150 g cukru",
+      "1 vanilka",
+      "1 dl oleje",
+      "3 žloutky",
+      "1 vejce",
+      "1/2 l mléka",
+      "1 zlatý klas"
+    ],
+    "method": "Těsto rozválet na plech, nalít tvarohovou náplň a péct asi 30 minut. Poté dát navrch sníh ze 4 bílků a cukru a krátce dopéct.",
+    "temperature": "180 °C",
+    "time": "asi 40 min",
+    "source": "1000054657.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R025",
+    "name": "Medové řezy",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "500 g hladké/polohrubé mouky",
+      "100 g margarínu",
+      "200 g moučkového cukru",
+      "3 PL medu",
+      "3 PL mléka",
+      "1 ČL sody",
+      "3 ČL kakaa",
+      "1 vejce"
+    ],
+    "method": "Vypracovat těsto, rozdělit na 3 části, rozválet a upéct. Plnit pudinkovým krémem.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054656.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R026",
+    "name": "Metrový koláč",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "4 žloutky",
+      "250 g moučkového cukru",
+      "1/2 dl oleje",
+      "1/2 dl vody",
+      "200 g hladké mouky",
+      "sníh z bílků",
+      "1 prášek do pečiva",
+      "kakao",
+      "Krém: 1/2 l mléka",
+      "2 pudingy",
+      "250 g margarínu",
+      "200 g moučkového cukru",
+      "1 vanilka"
+    ],
+    "method": "Těsto rozdělit na světlou a kakaovou část, upéct ve formách srnčí hřbet. Spojovat střídavě krémem a krájet šikmo.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054655.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R027",
+    "name": "Kokosová roláda nepečená",
+    "category": "Nepečené",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "Těsto: 70 g margarínu",
+      "250 g moučkového cukru",
+      "500 g pomletých keksů",
+      "1 PL kakaa",
+      "1 vejce",
+      "1 dl rumu",
+      "Plnka: 180 g margarínu",
+      "250 g moučkového cukru",
+      "250 g kokosu"
+    ],
+    "method": "Vypracovat těsto, rozválet. Náplň rozetřít na těsto a srolovat.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054654.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R028",
+    "name": "Zákusok z vína obalený v cukru",
+    "category": "Vánoční cukroví",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "250 g margarínu",
+      "300 g polohrubé mouky",
+      "7 PL vína"
+    ],
+    "method": "Těsto nechat přes noc v chladu, rozválet na 1/2 cm, vykrajovat a horké obalovat v cukru.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054654.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R029",
+    "name": "Piškóta z pudingu",
+    "category": "Dezerty",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "4 vejce",
+      "1 pohár moučkového cukru",
+      "4 Zlaté klasy/pudingy",
+      "1 prášek do pečiva"
+    ],
+    "method": "Vyšlehat piškotové těsto a upéct.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054654.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R030",
+    "name": "Domácí čokoláda",
+    "category": "Nepečené",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "250 g ztuženého tuku Cera",
+      "250 g moučkového cukru",
+      "50 g kakaa",
+      "6 PL mléka"
+    ],
+    "method": "Vymíchat nad párou a plnit do vypláchnutých formiček.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054653.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R031",
+    "name": "Makový koláč – řezy",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "80 g margarínu",
+      "3 vejce",
+      "250 g moučkového cukru",
+      "2 dl mléka",
+      "170 g máku",
+      "200 g hrubé mouky",
+      "1/2 prášku do pečiva",
+      "1 vanilka"
+    ],
+    "method": "Vymíchat a upéct. Za horka polít polevou z bílku a moučkového cukru.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054653.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R032",
+    "name": "Dunajské vlny",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "3 vejce",
+      "moučkový cukr",
+      "200 g polohrubé mouky",
+      "margarín",
+      "sůl",
+      "prášek do pečiva",
+      "kakao",
+      "višeň nebo ovoce",
+      "Krém: mléko",
+      "cukr",
+      "vanilka",
+      "puding",
+      "margarín"
+    ],
+    "method": "Připravit světlé a kakaové těsto, přidat ovoce, upéct a potřít pudinkovým krémem.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054651.jpg",
+    "status": "Přepis ke kontrole"
+  },
+  {
+    "id": "R033",
+    "name": "Ježe",
+    "category": "Zákusky",
+    "author": "Autor ze sešitu",
+    "ingredients": [
+      "100 g margarínu",
+      "300 g moučkového cukru",
+      "2 vejce",
+      "1 dl mléka",
+      "prášek do pečiva",
+      "350 g polohrubé mouky",
+      "Poleva: 300 g krystalového cukru",
+      "11 PL vody",
+      "150 g margarínu",
+      "20 g kakaa",
+      "kokos na obalení"
+    ],
+    "method": "Upéct těsto, nakrájet na kostky, namáčet v čokoládové polevě a obalovat v kokosu.",
+    "temperature": "",
+    "time": "",
+    "source": "1000054651.jpg",
+    "status": "Přepis ke kontrole"
+  }
+]
