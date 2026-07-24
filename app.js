@@ -18,7 +18,7 @@ function render(){
     const hay=[r.name,r.author,r.category,...r.ingredients,r.method].join(' ').toLowerCase();
     return (!q||hay.includes(q))&&(!cat||r.category===cat);
   });
-  document.getElementById('stats').textContent=`${filtered.length} receptů z ${recipes.length}`;
+  document.getElementById('stats').textContent=`${filtered.length} receptov z ${recipes.length}`;
   cards.innerHTML=filtered.map(r=>`
     <article class="card" onclick="openRecipe('${r.id}')">
       <div class="thumb" style="background-image:url('images/${r.source}')"><span class="badge">${esc(r.category)}</span></div>
@@ -35,10 +35,10 @@ function openRecipe(id){
     <span class="pill">${esc(r.category)}</span><span class="pill">Autor: ${esc(r.author)}</span>
     ${r.temperature?`<span class="pill">🔥 ${esc(r.temperature)}</span>`:''}
     ${r.time?`<span class="pill">⏱ ${esc(r.time)}</span>`:''}
-    <div class="note">⚠️ ${esc(r.status)} – nejasná místa budeme postupně ověřovat podle originálu.</div>
+    <div class="note">⚠️ ${esc(r.status)} – nejasné miesta budeme postupne overovať podľa originálu.</div>
     <div class="cols">
       <div><h3>Suroviny</h3><ul>${r.ingredients.map(i=>`<li>${esc(i)}</li>`).join('')}</ul><h3>Postup</h3><p>${esc(r.method)}</p></div>
-      <div><h3>Původní stránka</h3><img class="source" src="images/${r.source}" alt="Originální recept"></div>
+      <div><h3>Pôvodná stránka</h3><img class="source" src="images/${r.source}" alt="Originálny recept"></div>
     </div>
   </div>`;
   detail.showModal();

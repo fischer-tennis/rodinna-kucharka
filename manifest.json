@@ -1,9 +1,27 @@
 {
-  "name": "Rodinná kuchařka",
-  "short_name": "Kuchařka",
-  "start_url": "./index.html",
+  "id": "./",
+  "name": "Rodinná kuchárka",
+  "short_name": "Kuchárka",
+  "description": "Rodinný archív receptov zo starých zošitov.",
+  "lang": "sk",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#f6efe7",
-  "theme_color": "#7a3e1d",
-  "icons": []
+  "theme_color": "#8f1712",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
