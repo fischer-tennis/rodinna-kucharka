@@ -16,3 +16,11 @@ Spuštění:
 Nahrajte celý obsah složky na webový hosting. Pro místní test lze použít jednoduchý
 lokální webový server. Pouhé otevření index.html funguje v některých prohlížečích
 omezeně, protože se načítá soubor recipes.json.
+
+
+VERZIA 1.1.1 CLOUD – OPRAVA MOBILU
+- opravené prihlásenie na Android zariadeniach
+- Supabase sa načítava kompatibilnejším spôsobom
+- doplnené náhradné otvorenie dialógov
+- opravené tlačidlo inštalácie PWA
+- aktualizovaná cache service workera
