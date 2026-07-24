@@ -2,14 +2,14 @@
   "id": "./",
   "name": "Rodinná kuchárka",
   "short_name": "Kuchárka",
-  "description": "Rodinný archív receptov zo starých zošitov.",
+  "description": "Moderná rodinná kuchárka s receptami a pôvodnými stránkami zo zošitov.",
   "lang": "sk",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f6efe7",
-  "theme_color": "#8f1712",
+  "background_color": "#f6efe6",
+  "theme_color": "#7b211b",
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -23,5 +23,9 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "categories": [
+    "food",
+    "lifestyle"
   ]
 }

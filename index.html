@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#8f1712">
+<meta name="theme-color" content="#7b211b">
 <meta name="application-name" content="Rodinná kuchárka">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,31 +15,78 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <div>
-    <small>Rodinný archív receptov</small>
-    <h1>Rodinná kuchárka</h1>
+<div id="splash" class="splash" aria-hidden="true">
+  <img src="icons/icon-512.png" alt="">
+  <h1>Rodinná kuchárka</h1>
+  <p>Recepty našich babičiek, mamičiek a celej rodiny.</p>
+</div>
+
+<header class="app-header">
+  <div class="brand">
+    <img src="icons/icon-96.png" alt="" class="brand-icon">
+    <div><span>Vitaj doma</span><h1>Rodinná kuchárka</h1></div>
   </div>
-  <button id="installBtn" hidden>Pridať do mobilu</button>
+  <button id="installBtn" class="icon-button install-button" hidden aria-label="Nainštalovať aplikáciu">↓</button>
 </header>
 
 <main>
-  <section class="hero">
-    <h2>Recepty zo starého zošita, prepísané pre celú rodinu ❤️</h2>
-    <div class="searchrow">
-      <input id="search" placeholder="Hľadať recept, autora alebo surovinu…">
-      <select id="category"><option value="">Všetky kategórie</option></select>
+  <section class="welcome-card">
+    <div class="welcome-copy">
+      <span class="eyebrow">Rodinné recepty na jednom mieste</span>
+      <h2>Čo dnes upečieme?</h2>
+      <p>Vyhľadaj recept alebo si vyber z kategórií.</p>
+      <label class="searchbox">
+        <span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="Hľadať recept alebo surovinu…" autocomplete="off">
+      </label>
     </div>
-    <div id="stats"></div>
+    <img src="icons/icon-512.png" alt="Červená kniha Rodinná kuchárka" class="welcome-book">
   </section>
-  <section id="cards" class="grid"></section>
+
+  <section class="section-block">
+    <div class="section-heading"><div><span>Rýchly výber</span><h2>Kategórie</h2></div><button id="allCategoriesBtn" class="text-button">Všetky</button></div>
+    <div id="categoryChips" class="category-row" aria-label="Kategórie receptov"></div>
+  </section>
+
+  <section id="featuredSection" class="section-block">
+    <div class="section-heading"><div><span>Dnešný tip</span><h2>Odporúčaný recept</h2></div></div>
+    <div id="featuredRecipe"></div>
+  </section>
+
+  <section class="section-block recipes-section">
+    <div class="section-heading">
+      <div><span id="listLabel">Naša zbierka</span><h2 id="listTitle">Všetky recepty</h2></div>
+      <button id="clearBtn" class="text-button" hidden>Zrušiť filter</button>
+    </div>
+    <div id="stats" class="stats"></div>
+    <section id="cards" class="recipe-grid" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden><div>📖</div><h3>Nič sme nenašli</h3><p>Skús iný názov, surovinu alebo kategóriu.</p></div>
+  </section>
 </main>
 
+<nav class="bottom-nav" aria-label="Hlavná navigácia">
+  <button class="nav-item active" data-view="home"><span>⌂</span><small>Domov</small></button>
+  <button class="nav-item" data-view="recipes"><span>▤</span><small>Recepty</small></button>
+  <button class="nav-item" data-view="favorites"><span>♡</span><small>Obľúbené</small></button>
+  <button class="nav-item" data-view="settings"><span>⚙</span><small>Info</small></button>
+</nav>
+
 <dialog id="detail">
-  <button class="close" onclick="detail.close()">×</button>
+  <button class="close" aria-label="Zavrieť recept">×</button>
   <div id="detailContent"></div>
 </dialog>
 
+<dialog id="infoDialog" class="info-dialog">
+  <button class="close info-close" aria-label="Zavrieť">×</button>
+  <div class="info-content">
+    <img src="icons/icon-192.png" alt="">
+    <h2>Rodinná kuchárka</h2>
+    <p>Recepty našich babičiek, mamičiek a celej rodiny.</p>
+    <strong>Verzia 1.0 Preview</strong>
+  </div>
+</dialog>
+
+<footer>Rodinná kuchárka · v1.0 Preview</footer>
 <script src="app.js"></script>
 </body>
 </html>
