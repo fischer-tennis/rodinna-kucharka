@@ -1,5 +1,5 @@
-const CACHE='rodinna-kucharka-v114-supabase-name-fix';
-const CORE=['./','index.html','style.css','app.js?v=114','recipes.json','manifest.json','icons/icon-32.png','icons/icon-96.png','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'];
+const CACHE='rodinna-kucharka-v120-edit-history';
+const CORE=['./','index.html','style.css?v=120','app.js?v=120','recipes.json','manifest.json','icons/icon-32.png','icons/icon-96.png','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
