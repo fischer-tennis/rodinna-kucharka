@@ -1,9 +1,9 @@
-Rodinná kuchárka 2.0.2 Stable
+Rodinná kuchárka 2.0.3 Stable
 
-Opravy:
-- spoľahlivejšie kopírovanie zadania pre ChatGPT,
-- na Androide sa tlačidlo pokúsi otvoriť priamo aplikáciu ChatGPT,
-- opravené rozloženie formulára na úzkych mobilných displejoch,
-- nová cache service workera.
+Oprava načítania starej verzie:
+- cache-busting pre app.js a style.css,
+- service worker sa aktualizuje bez HTTP cache,
+- hlavná stránka sa načítava zo siete bez starej cache,
+- opravené číslo verzie v informáciách.
 
-Na GitHub nahraď súbory index.html, app.js, style.css a sw.js.
+Na GitHub nahraď súbory index.html, app.js, style.css a sw.js v koreňovom priečinku webu.

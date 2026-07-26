@@ -108,5 +108,12 @@ document.querySelectorAll('.nav-item').forEach(btn=>btn.onclick=()=>{const view=
 function updateNavigation(view){document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===view))}
 document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installBtn').hidden=false});$('installBtn').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('installBtn').hidden=true}};
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+if('serviceWorker' in navigator){
+  window.addEventListener('load', async()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('sw.js?v=2.0.3',{updateViaCache:'none'});
+      await reg.update();
+    }catch(err){console.info('Service worker sa nepodarilo aktualizovať.',err)}
+  });
+}
 init().catch(err=>{console.error(err);$('cards').innerHTML='<p>Nepodarilo sa spustiť aplikáciu.</p>'});
