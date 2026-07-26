@@ -290,7 +290,64 @@ document.getElementById('saveNewPasswordBtn').addEventListener('click',async()=>
   if(!error)setTimeout(()=>closeDialog(authDialog),800);
 });
 
+
+function fileToCompressedDataUrl(file, maxSide = 1800, quality = 0.84){
+  return new Promise((resolve,reject)=>{
+    if(!file || !file.type.startsWith('image/')) return reject(new Error('Vybraný súbor nie je fotografia.'));
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Fotografiu sa nepodarilo načítať.'));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Fotografiu sa nepodarilo spracovať.'));
+      img.onload=()=>{
+        let {width,height}=img;
+        const scale=Math.min(1,maxSide/Math.max(width,height));
+        width=Math.max(1,Math.round(width*scale)); height=Math.max(1,Math.round(height*scale));
+        const canvas=document.createElement('canvas'); canvas.width=width; canvas.height=height;
+        const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,width,height);
+        resolve(canvas.toDataURL('image/jpeg',quality));
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function transcribeRecipeWithAI(){
+  const message=document.getElementById('aiMessage');
+  const progress=document.getElementById('aiProgress');
+  const button=document.getElementById('aiTranscribeBtn');
+  const files=[...document.getElementById('aiRecipeImages').files];
+  message.textContent='';
+  if(!currentUser){message.textContent='Najprv sa prihlás.';return;}
+  if(!sbClient){message.textContent='Cloud ešte nie je pripojený.';return;}
+  if(!files.length){message.textContent='Vyber aspoň jednu fotografiu receptu.';return;}
+  if(files.length>4){message.textContent='Naraz môžeš použiť najviac 4 fotografie.';return;}
+  if(files.some(f=>f.size>15*1024*1024)){message.textContent='Jedna fotografia je príliš veľká. Maximálne 15 MB.';return;}
+  button.disabled=true; progress.hidden=false;
+  try{
+    const images=[];
+    for(const file of files) images.push(await fileToCompressedDataUrl(file));
+    const {data,error}=await sbClient.functions.invoke('ai-prepis-receptu',{body:{images}});
+    if(error) throw error;
+    if(!data?.recipe) throw new Error(data?.error||'AI nevrátila recept.');
+    const r=data.recipe;
+    document.getElementById('newTitle').value=r.title||'';
+    document.getElementById('newCategory').value=r.category||'';
+    document.getElementById('newAuthor').value=r.author||'';
+    document.getElementById('newIngredients').value=Array.isArray(r.ingredients)?r.ingredients.join('\n'):'';
+    document.getElementById('newInstructions').value=r.instructions||'';
+    message.textContent='Hotovo. Recept si teraz dôkladne skontroluj a potom ho ulož.';
+  }catch(error){
+    console.error(error);
+    const text=String(error?.message||error||'').toLowerCase();
+    if(text.includes('non-2xx')) message.textContent='AI služba nie je ešte nastavená alebo vrátila chybu. Skontroluj Edge Function a OpenAI kľúč.';
+    else message.textContent='Nepodarilo sa prečítať recept: '+(error?.message||'neznáma chyba');
+  }finally{button.disabled=false;progress.hidden=true;}
+}
+
 addRecipeBtn.addEventListener('click',()=>addDialog.showModal());
+document.getElementById('aiTranscribeBtn').addEventListener('click',transcribeRecipeWithAI);
 document.getElementById('saveNewRecipe').addEventListener('click',async()=>{const title=document.getElementById('newTitle').value.trim();if(!title){document.getElementById('addMessage').textContent='Zadaj názov receptu.';return;}const ingredients=document.getElementById('newIngredients').value.split('\n').map(x=>x.trim()).filter(Boolean);const payload={title,category:document.getElementById('newCategory').value.trim()||'Ostatné',ingredients,instructions:document.getElementById('newInstructions').value.trim(),author_name:document.getElementById('newAuthor').value.trim()||null,added_by:currentUser.id};const {data,error}=await sbClient.from('recipes').insert(payload).select().single();if(error){document.getElementById('addMessage').textContent='Chyba: '+error.message;return;}for(const [input,type,column] of [['newFoodImage','food','main_image_url'],['newNotebookImage','notebook','notebook_image_url']]){const file=document.getElementById(input).files[0];if(file){const path=`${currentUser.id}/${data.id}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const up=await sbClient.storage.from('recipe-images').upload(path,file);if(!up.error){const {data:urlData}=sbClient.storage.from('recipe-images').getPublicUrl(path);await sbClient.from('recipe_images').insert({recipe_id:data.id,image_url:urlData.publicUrl,image_type:type,uploaded_by:currentUser.id});await sbClient.from('recipes').update({[column]:urlData.publicUrl}).eq('id',data.id);}}}document.getElementById('addMessage').textContent='Recept bol uložený a už ho vidia všetci.';await loadCloudData();setTimeout(()=>closeDialog(addDialog),700);});
 
 document.getElementById('importBtn').addEventListener('click',async()=>{if(!currentUser||!confirm(`Preniesť ${localRecipes.length} pôvodných receptov do spoločnej databázy?`))return;const btn=document.getElementById('importBtn');btn.disabled=true;for(const r of localRecipes){const payload={title:r.name,category:r.category||'Ostatné',ingredients:r.ingredients||[],instructions:r.method||'',author_name:r.author&&r.author!=='Autor ze sešitu'?r.author:null,added_by:currentUser.id,source_note:`legacy:${r.id}`,notebook_image_url:r.source?`images/${r.source}`:null};const {error}=await sbClient.from('recipes').insert(payload);if(error){alert('Import sa zastavil: '+error.message);btn.disabled=false;return;}}alert('Pôvodné recepty boli prenesené do cloudu.');await loadCloudData();});
