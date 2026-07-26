@@ -1,5 +1,6 @@
 const SUPABASE_URL = 'https://mbgdesaueodahxwmydnn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_lNHmPFBuqHZYcKov9QmprQ_oIq1Jry9';
+const AUTH_REDIRECT_URL = 'https://fischer-tennis.github.io/rodinna-kucharka/';
 let sbClient = null;
 let cloudAvailable = false;
 let cloudStarted = false;
@@ -214,9 +215,41 @@ async function uploadExtraImage(recipeId,file){if(!file)return;const msg=documen
 function updateAccountUI(){const name=currentUser?.user_metadata?.display_name||currentUser?.email?.split('@')[0];accountBtn.textContent=currentUser?`👤 ${name}`:'👤 Prihlásiť';addRecipeBtn.hidden=!currentUser;document.getElementById('importBtn').hidden=!(currentUser&&recipes.every(r=>r.is_local));}
 accountBtn.addEventListener('click',()=>{document.getElementById('newPasswordFields').hidden=true;document.getElementById('authTitle').textContent=currentUser?'Účet':'Prihlásenie';if(!sbClient){document.getElementById('authMessage').textContent='Pripájam cloud… Skús o chvíľu znova.';}else{document.getElementById('authMessage').textContent='';}if(currentUser){document.getElementById('authTitle').textContent='Účet';document.getElementById('authFields').hidden=true;document.getElementById('logoutBtn').hidden=false;document.getElementById('authMessage').textContent=currentUser.email;openDialog(authDialog);}else{document.getElementById('authFields').hidden=false;document.getElementById('logoutBtn').hidden=true;openDialog(authDialog);}});
 document.getElementById('loginBtn').addEventListener('click',async()=>{if(!sbClient){document.getElementById('authMessage').textContent='Cloud ešte nie je pripojený. Skontroluj internet a skús znova.';return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;const {error}=await sbClient.auth.signInWithPassword({email,password});document.getElementById('authMessage').textContent=error?'Chyba: '+error.message:'Prihlásenie úspešné.';if(!error)setTimeout(()=>closeDialog(authDialog),400);});
-document.getElementById('signupBtn').addEventListener('click',async()=>{if(!sbClient){document.getElementById('authMessage').textContent='Cloud ešte nie je pripojený. Skontroluj internet a skús znova.';return;}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,display_name=document.getElementById('authName').value.trim();const {data,error}=await sbClient.auth.signUp({email,password,options:{data:{display_name}}});document.getElementById('authMessage').textContent=error?'Chyba: '+error.message:(data.session?'Účet vytvorený a prihlásený.':'Účet vytvorený. Skontroluj potvrdzovací e-mail.');});
+document.getElementById('signupBtn').addEventListener('click',async()=>{
+  const message=document.getElementById('authMessage');
+  if(!sbClient){message.textContent='Cloud ešte nie je pripojený. Skontroluj internet a skús znova.';return;}
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const display_name=document.getElementById('authName').value.trim();
+  if(!display_name){message.textContent='Zadaj meno.';return;}
+  if(!email){message.textContent='Zadaj e-mail.';return;}
+  if(password.length<6){message.textContent='Heslo musí mať minimálne 6 znakov.';return;}
+  message.textContent='Vytváram účet…';
+  const {data,error}=await sbClient.auth.signUp({
+    email,
+    password,
+    options:{
+      data:{display_name},
+      emailRedirectTo:AUTH_REDIRECT_URL
+    }
+  });
+  message.textContent=error?friendlyAuthError(error):(data.session?'Účet bol vytvorený a si prihlásený.':'Účet bol vytvorený. Skontroluj potvrdzovací e-mail.');
+});
+
 document.getElementById('logoutBtn').addEventListener('click',async()=>{if(!sbClient)return;await sbClient.auth.signOut();closeDialog(authDialog);});
 
+
+function friendlyAuthError(error){
+  const text=(error?.message||'').toLowerCase();
+  const seconds=text.match(/after\s+(\d+)\s+seconds?/i)?.[1];
+  if(seconds) return `Z bezpečnostných dôvodov počkaj ${seconds} sekúnd a skús to znova.`;
+  if(text.includes('email rate limit exceeded')) return 'Bol prekročený limit odosielania e-mailov. Počkaj približne hodinu a skús to znova.';
+  if(text.includes('invalid login credentials')) return 'Nesprávny e-mail alebo heslo.';
+  if(text.includes('email not confirmed')) return 'E-mail ešte nie je potvrdený. Použi možnosť „Poslať potvrdenie znova“.';
+  if(text.includes('user already registered')) return 'Tento e-mail je už zaregistrovaný. Skús sa prihlásiť alebo obnoviť heslo.';
+  if(text.includes('password should be at least')) return 'Heslo musí mať minimálne 6 znakov.';
+  return 'Chyba: '+(error?.message||'Neznáma chyba');
+}
 
 function showPasswordRecovery(){
   document.getElementById('authTitle').textContent='Nastaviť nové heslo';
@@ -227,12 +260,26 @@ function showPasswordRecovery(){
   openDialog(authDialog);
 }
 
+document.getElementById('resendConfirmationBtn').addEventListener('click',async()=>{
+  const message=document.getElementById('authMessage');
+  if(!sbClient){message.textContent='Cloud ešte nie je pripojený.';return;}
+  const email=document.getElementById('authEmail').value.trim();
+  if(!email){message.textContent='Najprv zadaj e-mail.';return;}
+  message.textContent='Odosielam potvrdzovací e-mail…';
+  const {error}=await sbClient.auth.resend({
+    type:'signup',
+    email,
+    options:{emailRedirectTo:AUTH_REDIRECT_URL}
+  });
+  message.textContent=error?friendlyAuthError(error):'Potvrdzovací e-mail bol odoslaný znova.';
+});
+
 document.getElementById('forgotPasswordBtn').addEventListener('click',async()=>{
   if(!sbClient){document.getElementById('authMessage').textContent='Cloud ešte nie je pripojený.';return;}
   const email=document.getElementById('authEmail').value.trim();
   if(!email){document.getElementById('authMessage').textContent='Najprv zadaj e-mail.';return;}
-  const {error}=await sbClient.auth.resetPasswordForEmail(email,{redirectTo:'https://fischer-tennis.github.io/rodinna-kucharka/'});
-  document.getElementById('authMessage').textContent=error?'Chyba: '+error.message:'Odkaz na zmenu hesla bol odoslaný na e-mail.';
+  const {error}=await sbClient.auth.resetPasswordForEmail(email,{redirectTo:AUTH_REDIRECT_URL});
+  document.getElementById('authMessage').textContent=error?friendlyAuthError(error):'Odkaz na zmenu hesla bol odoslaný na e-mail.';
 });
 
 document.getElementById('saveNewPasswordBtn').addEventListener('click',async()=>{

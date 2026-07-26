@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
-<link rel="stylesheet" href="style.css?v=120">
+<link rel="stylesheet" href="style.css?v=121">
 </head>
 <body>
 <div id="splash" class="splash" aria-hidden="true">
@@ -94,14 +94,14 @@
     <img src="icons/icon-192.png" alt="">
     <h2>Rodinná kuchárka</h2>
     <p>Recepty našich babičiek, mamičiek a celej rodiny.</p>
-    <strong>Verzia 1.2 Cloud</strong>
+    <strong>Verzia 1.2.1 Cloud</strong>
   </div>
 </dialog>
 
-<dialog id="authDialog" class="form-dialog"><button class="close">×</button><div class="dialog-form"><h2 id="authTitle">Prihlásenie</h2><div id="authFields"><label>Meno<input id="authName" autocomplete="name" placeholder="Ján Fischer"></label><label>E-mail<input id="authEmail" type="email" autocomplete="email"></label><label>Heslo<input id="authPassword" type="password" autocomplete="current-password" minlength="6"></label><div class="form-actions"><button id="loginBtn" class="primary-button" type="button">Prihlásiť</button><button id="signupBtn" class="secondary-button" type="button">Vytvoriť účet</button></div><button id="forgotPasswordBtn" class="text-button" type="button">Zabudol som heslo</button><div id="newPasswordFields" hidden><label>Nové heslo<input id="newPassword" type="password" minlength="6" autocomplete="new-password"></label><button id="saveNewPasswordBtn" class="primary-button" type="button">Uložiť nové heslo</button></div></div><button id="logoutBtn" class="danger-button" hidden type="button">Odhlásiť sa</button><p id="authMessage" class="save-message"></p></div></dialog>
+<dialog id="authDialog" class="form-dialog"><button class="close">×</button><div class="dialog-form"><h2 id="authTitle">Prihlásenie</h2><div id="authFields"><label>Meno<input id="authName" autocomplete="name" placeholder="Ján Fischer"></label><label>E-mail<input id="authEmail" type="email" autocomplete="email"></label><label>Heslo<input id="authPassword" type="password" autocomplete="current-password" minlength="6"></label><div class="form-actions"><button id="loginBtn" class="primary-button" type="button">Prihlásiť</button><button id="signupBtn" class="secondary-button" type="button">Vytvoriť účet</button></div><button id="forgotPasswordBtn" class="text-button" type="button">Zabudol som heslo</button><button id="resendConfirmationBtn" class="text-button" type="button">Poslať potvrdenie znova</button><div id="newPasswordFields" hidden><label>Nové heslo<input id="newPassword" type="password" minlength="6" autocomplete="new-password"></label><button id="saveNewPasswordBtn" class="primary-button" type="button">Uložiť nové heslo</button></div></div><button id="logoutBtn" class="danger-button" hidden type="button">Odhlásiť sa</button><p id="authMessage" class="save-message"></p></div></dialog>
 <dialog id="addDialog" class="form-dialog"><button class="close">×</button><div class="dialog-form"><h2>Pridať recept</h2><label>Názov<input id="newTitle"></label><label>Kategória<input id="newCategory" placeholder="Koláče, Polievky…"></label><label>Autor receptu<input id="newAuthor"></label><label>Suroviny – každá na nový riadok<textarea id="newIngredients" rows="7"></textarea></label><label>Postup<textarea id="newInstructions" rows="8"></textarea></label><label>Fotka hotového jedla<input id="newFoodImage" type="file" accept="image/*"></label><label>Fotka originálu zo zošita<input id="newNotebookImage" type="file" accept="image/*"></label><button id="saveNewRecipe" class="primary-button" type="button">Uložiť recept</button><p id="addMessage" class="save-message"></p></div></dialog>
-<footer>Rodinná kuchárka · v1.2 Cloud</footer>
+<footer>Rodinná kuchárka · v1.2.1 Cloud</footer>
 <script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.95.0/dist/umd/supabase.min.js" onload="window.dispatchEvent(new Event('supabase-ready'))" onerror="window.dispatchEvent(new Event('supabase-error'))"></script>
-<script defer src="app.js?v=120"></script>
+<script defer src="app.js?v=121"></script>
 </body>
 </html>
