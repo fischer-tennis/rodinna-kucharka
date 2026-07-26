@@ -3,3 +3,9 @@
 @media(max-width:600px){.account-button{max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.app-header{gap:8px}.cloud-actions{justify-content:stretch}.cloud-actions button{flex:1}.ai-step-actions{display:grid}.ai-photo-actions{display:grid}}
 @media(max-width:430px){.author-editor{grid-template-columns:1fr}.author-editor button{padding:12px}.recipe-review{padding:14px}.dialog-form{padding:23px 18px}}
 @media(max-width:390px){.welcome-book{display:none}.welcome-card{grid-template-columns:1fr}.recipe-grid{grid-template-columns:1fr}.recipe-thumb{height:185px}}
+
+/* v2.0.2: mobilná oprava dialógu a AI pomocníka */
+.form-dialog{max-width:calc(100vw - 20px);overflow-x:hidden}
+.dialog-form,.ai-helper,.dialog-form label{min-width:0}
+.dialog-form input,.dialog-form textarea,.ai-helper textarea{min-width:0;max-width:100%}
+@media(max-width:600px){.form-dialog{width:calc(100vw - 20px);margin:auto}.dialog-form{padding:68px 14px 22px}.close{position:absolute;right:4px;top:4px}.ai-photo-actions,.ai-step-actions{grid-template-columns:1fr}.ai-photo-actions>* ,.ai-step-actions>*{width:100%;min-width:0}}

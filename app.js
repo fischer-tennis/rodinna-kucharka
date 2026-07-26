@@ -49,8 +49,50 @@ $('logoutBtn').onclick=async()=>{await supabase.auth.signOut();$('authDialog').c
 const chatPrompt=`Prepíš recept z priloženej fotografie. Text môže byť po slovensky alebo česky. Zachovaj presne všetky množstvá, jednotky, teploty a časy. Nič si nevymýšľaj. Nečitateľné miesto označ [nečitateľné]. Odpovedz iba v tomto formáte:\n\nNÁZOV: ...\nKATEGÓRIA: ...\nAUTOR: ...\nSUROVINY:\n- ...\nPOSTUP:\n...`;
 function chooseRecipePhoto(file){if(!file)return;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(file);$('aiPhotoPreview').hidden=false;$('aiPhotoPreview').innerHTML=`<img src="${previewUrl}" alt="Náhľad"><div><strong>${esc(file.name||'Fotografia receptu')}</strong><small>Fotografia sa použije aj ako originál zo zošita.</small></div>`;try{const dt=new DataTransfer();dt.items.add(file);$('newNotebookImage').files=dt.files}catch(err){console.info('Fotografiu treba prípadne zvoliť aj v poli originálu.',err)}}
 $('cameraRecipeImage').onchange=e=>chooseRecipePhoto(e.target.files[0]);$('galleryRecipeImage').onchange=e=>chooseRecipePhoto(e.target.files[0]);
-$('copyPromptBtn').onclick=async()=>{try{await navigator.clipboard.writeText(chatPrompt);$('aiMessage').textContent='Zadanie je skopírované. V ChatGPT pridaj fotografiu.'}catch{const ta=document.createElement('textarea');ta.value=chatPrompt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();$('aiMessage').textContent='Zadanie je skopírované. V ChatGPT pridaj fotografiu.'}};
-$('openChatGPTBtn').onclick=()=>window.open('https://chatgpt.com/','_blank','noopener,noreferrer');
+async function copyChatPrompt(){
+  const message=$('aiMessage');
+  const button=$('copyPromptBtn');
+  const originalText=button.textContent;
+  let copied=false;
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(chatPrompt);
+      copied=true;
+    }
+  }catch(err){console.info('Clipboard API nie je dostupné.',err)}
+  if(!copied){
+    const ta=document.createElement('textarea');
+    ta.value=chatPrompt;
+    ta.setAttribute('readonly','');
+    ta.style.position='fixed';
+    ta.style.left='-9999px';
+    ta.style.top='0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0,ta.value.length);
+    try{copied=document.execCommand('copy')}catch(err){console.info('Náhradné kopírovanie zlyhalo.',err)}
+    ta.remove();
+  }
+  if(copied){
+    message.textContent='✓ Zadanie je skopírované. Teraz otvor ChatGPT a pridaj fotografiu.';
+    button.textContent='✓ Skopírované';
+    setTimeout(()=>button.textContent=originalText,1800);
+  }else{
+    window.prompt('Kopírovanie sa nepodarilo automaticky. Podrž prst na texte, označ všetko a zvoľ Kopírovať:',chatPrompt);
+    message.textContent='Zadanie sa otvorilo na ručné skopírovanie.';
+  }
+}
+$('copyPromptBtn').onclick=copyChatPrompt;
+$('openChatGPTBtn').onclick=()=>{
+  const fallback=encodeURIComponent('https://chatgpt.com/');
+  const androidIntent=`intent://chatgpt.com/#Intent;scheme=https;package=com.openai.chatgpt;S.browser_fallback_url=${fallback};end`;
+  if(/Android/i.test(navigator.userAgent)){
+    window.location.href=androidIntent;
+  }else{
+    window.open('https://chatgpt.com/','_blank','noopener,noreferrer');
+  }
+};
 function cleanHeading(s){return s.replace(/^\s*[#>*_`-]+\s*/,'').replace(/[\s*_`]+$/,'').trim()}
 function parseChatResult(text){const t=text.replace(/\r/g,'').replace(/\*\*/g,'').trim();const headings=['NÁZOV','KATEGÓRIA','AUTOR','SUROVINY','POSTUP'];const result={};for(let i=0;i<headings.length;i++){const h=headings[i],next=headings.slice(i+1).join('|');const re=new RegExp(`(?:^|\\n)\\s*(?:#+\\s*)?${h}\\s*:\\s*([\\s\\S]*?)${next?`(?=\\n\\s*(?:#+\\s*)?(?:${next})\\s*:)`:'$'}`,'i');result[h]=cleanHeading(t.match(re)?.[1]||'')}return result}
 $('fillFromChatGPTBtn').onclick=()=>{const p=parseChatResult($('chatgptResult').value);const ing=(p.SUROVINY||'').split('\n').map(x=>x.replace(/^\s*[-•*]\s*/,'').trim()).filter(Boolean);if(!p['NÁZOV']&&!ing.length&&!p.POSTUP){$('aiMessage').textContent='Odpoveď sa nepodarilo rozpoznať. Skontroluj, či obsahuje NÁZOV, SUROVINY a POSTUP.';return}$('newTitle').value=p['NÁZOV'];$('newCategory').value=p['KATEGÓRIA'];$('newAuthor').value=p.AUTOR;$('newIngredients').value=ing.join('\n');$('newInstructions').value=p.POSTUP;$('aiMessage').textContent='Polia boli vyplnené. Pred uložením ich skontroluj.'};
