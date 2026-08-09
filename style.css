@@ -9,3 +9,5 @@
 .dialog-form,.ai-helper,.dialog-form label{min-width:0}
 .dialog-form input,.dialog-form textarea,.ai-helper textarea{min-width:0;max-width:100%}
 @media(max-width:600px){.form-dialog{width:calc(100vw - 20px);margin:auto}.dialog-form{padding:68px 14px 22px}.close{position:absolute;right:4px;top:4px}.ai-photo-actions,.ai-step-actions{grid-template-columns:1fr}.ai-photo-actions>* ,.ai-step-actions>*{width:100%;min-width:0}}
+
+.recipe-gallery-section{margin-top:24px}.recipe-gallery-section h3{font:700 1.3rem Georgia,serif;color:#681b16;border-bottom:1px solid #ead6c4;padding-bottom:8px}.recipe-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}.gallery-item{border:0;padding:0;background:transparent;border-radius:14px;overflow:hidden;aspect-ratio:1;box-shadow:0 5px 16px #4a251518}.gallery-item img{width:100%;height:100%;display:block;object-fit:cover}.image-upload-row small,.field-help{color:#80695b;font-size:.78rem;font-weight:500}.field-help{display:block;margin-top:-3px}
