@@ -1,5 +1,5 @@
 const CACHE='rodinna-kucharka-v2-0-4-gallery';
-const CORE=['./','index.html','style.css?v=2.0.4','app.js?v=2.0.4','recipes.json','manifest.json','icons/icon-32.png','icons/icon-96.png','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'];
+const CORE=['./','index.html','style.css?v=2.0.5','app.js?v=2.0.5','recipes.json','manifest.json','icons/icon-32.png','icons/icon-96.png','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await Promise.all(CORE.map(file=>cache.add(file).catch(()=>null)));await self.skipWaiting()})()));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)));await self.clients.claim()})()));
 self.addEventListener('fetch',event=>{

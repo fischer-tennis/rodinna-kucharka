@@ -7,3 +7,5 @@ Oprava načítania starej verzie:
 - opravené číslo verzie v informáciách.
 
 Na GitHub nahraď súbory index.html, app.js, style.css a sw.js v koreňovom priečinku webu.
+
+Oprava 2.0.5: ďalšie fotografie sa ukladajú kompatibilne s existujúcim databázovým obmedzením, bez potreby meniť SQL.
