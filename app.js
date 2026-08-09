@@ -19,7 +19,7 @@ async function init(){
   try{const res=await fetch('recipes.json');if(res.ok)localRecipes=await res.json()}catch(err){console.info('Lokálne recepty nie sú dostupné.',err)}
   const {data:{session}}=await supabase.auth.getSession();currentUser=session?.user||null;
   supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;updateAccountUI();loadCloudData()});
-  updateAccountUI();await loadCloudData();subscribeRealtime();
+  updateAccountUI();await loadCloudData();openRecipeFromUrl();subscribeRealtime();
 }
 async function loadCloudData(){
   const [{data:cloud,error},{data:conf,error:confError},{data:imgs,error:imgError}]=await Promise.all([supabase.from('recipes').select('*').order('created_at',{ascending:false}),supabase.from('recipe_confirmations').select('*'),supabase.from('recipe_images').select('*').order('created_at',{ascending:true})]);
@@ -34,7 +34,62 @@ function renderFeatured(){if(!recipes.length){$('featuredSection').hidden=true;r
 function filteredRecipes(){const q=$('search').value.toLocaleLowerCase('sk').trim();return recipes.filter(r=>{const hay=[r.title||r.name,authorFor(r),r.category,...(r.ingredients||[]),r.instructions||r.method].join(' ').toLocaleLowerCase('sk');return(!q||hay.includes(q))&&(!activeCategory||r.category===activeCategory)&&(activeView!=='favorites'||favorites.has(String(r.id)))})}
 function render(){const list=filteredRecipes();$('stats').textContent=`${list.length} z ${recipes.length} receptov`;$('clearBtn').hidden=!($('search').value||activeCategory||activeView==='favorites');$('empty').hidden=!!list.length;$('cards').innerHTML=list.map(r=>{const id=String(r.id),count=confirmationCount(r.id);return `<article class="recipe-card" data-open="${esc(id)}"><div class="recipe-thumb" style="background-image:url('${esc(imageFor(r))}')"><span class="category-badge">${iconFor(r.category)} ${esc(r.category||'Ostatné')}</span><button class="favorite ${favorites.has(id)?'on':''}" data-fav="${esc(id)}" aria-label="Obľúbený recept">${favorites.has(id)?'♥':'♡'}</button></div><div class="recipe-body"><h3>${esc(r.title||r.name)}</h3><div class="recipe-meta"><span>${authorFor(r)?`👤 ${esc(authorFor(r))}`:'👤 Autor nezadaný'}</span></div><div class="recipe-status ${count?'confirmed':'pending'}">${count?`✓ ${count} potvrden${count===1?'ie':'ia'}`:'○ Čaká na kontrolu'}</div></div></article>`}).join('');$('cards').querySelectorAll('[data-open]').forEach(el=>el.onclick=()=>openRecipe(el.dataset.open));$('cards').querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleFavorite(b.dataset.fav)})}
 function toggleFavorite(id){favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();render()}
-async function openRecipe(id){const r=recipes.find(x=>String(x.id)===String(id));if(!r)return;const count=confirmationCount(r.id),mine=confirmedByMe(r.id);const extras=recipeImages.filter(img=>String(img.recipe_id)===String(r.id)&&img.image_url&&img.image_url!==r.main_image_url&&img.image_url!==r.notebook_image_url);const gallery=extras.length?`<section class="recipe-gallery-section"><h3>Ďalšie fotografie</h3><div class="recipe-gallery">${extras.map((img,i)=>`<button class="gallery-item" type="button" data-gallery="${i}"><img src="${esc(img.image_url)}" alt="Fotografia receptu ${i+1}"></button>`).join('')}</div></section>`:'';$('detailContent').innerHTML=`<div class="detail-hero" style="background-image:url('${esc(imageFor(r))}')"><div class="detail-title"><span>${iconFor(r.category)} ${esc(r.category||'Ostatné')}</span><h2>${esc(r.title||r.name)}</h2></div></div><div class="detail-content"><div class="detail-actions"><span class="pill">👤 ${esc(authorFor(r)||'Autor nezadaný')}</span><span class="pill">✅ ${count} potvrdení</span></div><section class="recipe-review ${count?'is-confirmed':''}"><div class="review-heading"><div><span>Spoločná kontrola</span><h3>${count?'Recept bol potvrdený':'Recept čaká na kontrolu'}</h3></div><div class="review-state">${count?'✓':'○'}</div></div>${currentUser&&!r.is_local?`<label class="review-check"><input id="confirmRecipe" type="checkbox" ${mine?'checked':''}><span>Potvrdzujem, že recept je správne prepísaný.</span></label><label class="author-label">Autor receptu</label><div class="author-editor"><input id="editAuthor" value="${esc(authorFor(r))}" placeholder="Meno autora"><button id="saveAuthor" type="button">Uložiť</button></div><div class="image-upload-row"><label class="upload-button">🖼️ Pridať ďalšie fotografie<input id="detailImage" type="file" accept="image/*" multiple hidden></label><small>Môžeš označiť viac fotografií naraz.</small></div>`:`<p class="login-note">${r.is_local?'Najprv prenesieme pôvodné recepty do cloudu.':'Pre potvrdenie a úpravy sa prihlás.'}</p>`}<p id="detailMessage" class="save-message"></p></section><div class="detail-columns"><div><h3>Suroviny</h3><ul>${(r.ingredients||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul><h3>Postup</h3><p>${esc(r.instructions||r.method||'Postup zatiaľ nie je prepísaný.')}</p></div><div><h3>Pôvodná stránka zo zošita</h3><img class="source" src="${esc(r.notebook_image_url||(r.source?`images/${r.source}`:imageFor(r)))}" alt="Originálny recept"></div></div>${gallery}</div>`;$('detail').showModal();$('detailContent').querySelectorAll('[data-gallery]').forEach((b,i)=>b.onclick=()=>window.open(extras[i].image_url,'_blank'));if(currentUser&&!r.is_local){$('confirmRecipe').onchange=e=>setConfirmation(r.id,e.target.checked);$('saveAuthor').onclick=()=>saveAuthor(r.id);$('detailImage').onchange=e=>uploadExtraImages(r.id,[...e.target.files])}}
+
+function recipeShareUrl(recipeId){
+  const url=new URL(location.href);
+  url.search='';
+  url.hash='';
+  url.searchParams.set('recept',String(recipeId));
+  return url.href;
+}
+function setRecipeUrl(recipeId){
+  const url=new URL(location.href);
+  url.searchParams.set('recept',String(recipeId));
+  history.replaceState(null,'',url);
+}
+function clearRecipeUrl(){
+  const url=new URL(location.href);
+  url.searchParams.delete('recept');
+  history.replaceState(null,'',url);
+}
+async function shareRecipe(r){
+  const url=recipeShareUrl(r.id);
+  const title=r.title||r.name||'Recept';
+  const text=`${title} – Rodinná kuchárka`;
+  const msg=$('detailMessage');
+  try{
+    if(navigator.share){
+      await navigator.share({title,text,url});
+      if(msg)msg.textContent='✓ Odkaz na recept bol zdieľaný.';
+      return;
+    }
+  }catch(err){
+    if(err?.name==='AbortError')return;
+    console.info('Systémové zdieľanie nie je dostupné.',err);
+  }
+  let copied=false;
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(url);
+      copied=true;
+    }
+  }catch(err){console.info('Clipboard API zlyhalo.',err)}
+  if(!copied){
+    const ta=document.createElement('textarea');
+    ta.value=url;ta.setAttribute('readonly','');
+    ta.style.position='fixed';ta.style.left='-9999px';
+    document.body.appendChild(ta);ta.select();
+    try{copied=document.execCommand('copy')}catch{}
+    ta.remove();
+  }
+  if(msg)msg.textContent=copied?'✓ Odkaz na recept je skopírovaný.':'Odkaz: '+url;
+}
+function openRecipeFromUrl(){
+  const id=new URL(location.href).searchParams.get('recept');
+  if(id&&recipes.some(r=>String(r.id)===String(id)))openRecipe(id,false);
+}
+
+async function openRecipe(id,updateUrl=true){const r=recipes.find(x=>String(x.id)===String(id));if(!r)return;if(updateUrl)setRecipeUrl(r.id);const count=confirmationCount(r.id),mine=confirmedByMe(r.id);const extras=recipeImages.filter(img=>String(img.recipe_id)===String(r.id)&&img.image_url&&img.image_url!==r.main_image_url&&img.image_url!==r.notebook_image_url);const gallery=extras.length?`<section class="recipe-gallery-section"><h3>Ďalšie fotografie</h3><div class="recipe-gallery">${extras.map((img,i)=>`<button class="gallery-item" type="button" data-gallery="${i}"><img src="${esc(img.image_url)}" alt="Fotografia receptu ${i+1}"></button>`).join('')}</div></section>`:'';$('detailContent').innerHTML=`<div class="detail-hero" style="background-image:url('${esc(imageFor(r))}')"><div class="detail-title"><span>${iconFor(r.category)} ${esc(r.category||'Ostatné')}</span><h2>${esc(r.title||r.name)}</h2></div></div><div class="detail-content"><div class="detail-actions"><span class="pill">👤 ${esc(authorFor(r)||'Autor nezadaný')}</span><span class="pill">✅ ${count} potvrdení</span><button id="shareRecipeBtn" class="share-recipe-button" type="button">↗ Zdieľať recept</button></div><section class="recipe-review ${count?'is-confirmed':''}"><div class="review-heading"><div><span>Spoločná kontrola</span><h3>${count?'Recept bol potvrdený':'Recept čaká na kontrolu'}</h3></div><div class="review-state">${count?'✓':'○'}</div></div>${currentUser&&!r.is_local?`<label class="review-check"><input id="confirmRecipe" type="checkbox" ${mine?'checked':''}><span>Potvrdzujem, že recept je správne prepísaný.</span></label><label class="author-label">Autor receptu</label><div class="author-editor"><input id="editAuthor" value="${esc(authorFor(r))}" placeholder="Meno autora"><button id="saveAuthor" type="button">Uložiť</button></div><div class="image-upload-row"><label class="upload-button">🖼️ Pridať ďalšie fotografie<input id="detailImage" type="file" accept="image/*" multiple hidden></label><small>Môžeš označiť viac fotografií naraz.</small></div>`:`<p class="login-note">${r.is_local?'Najprv prenesieme pôvodné recepty do cloudu.':'Pre potvrdenie a úpravy sa prihlás.'}</p>`}<p id="detailMessage" class="save-message"></p></section><div class="detail-columns"><div><h3>Suroviny</h3><ul>${(r.ingredients||[]).map(i=>`<li>${esc(i)}</li>`).join('')}</ul><h3>Postup</h3><p>${esc(r.instructions||r.method||'Postup zatiaľ nie je prepísaný.')}</p></div><div><h3>Pôvodná stránka zo zošita</h3><img class="source" src="${esc(r.notebook_image_url||(r.source?`images/${r.source}`:imageFor(r)))}" alt="Originálny recept"></div></div>${gallery}</div>`;$('detail').showModal();$('shareRecipeBtn').onclick=()=>shareRecipe(r);$('detailContent').querySelectorAll('[data-gallery]').forEach((b,i)=>b.onclick=()=>window.open(extras[i].image_url,'_blank'));if(currentUser&&!r.is_local){$('confirmRecipe').onchange=e=>setConfirmation(r.id,e.target.checked);$('saveAuthor').onclick=()=>saveAuthor(r.id);$('detailImage').onchange=e=>uploadExtraImages(r.id,[...e.target.files])}}
 async function setConfirmation(recipeId,checked){const msg=$('detailMessage');if(checked){const {error}=await supabase.from('recipe_confirmations').insert({recipe_id:recipeId,user_id:currentUser.id});if(error&&!error.message.toLowerCase().includes('duplicate'))msg.textContent='Chyba: '+error.message}else await supabase.from('recipe_confirmations').delete().eq('recipe_id',recipeId).eq('user_id',currentUser.id);await loadCloudData();openRecipe(recipeId)}
 async function saveAuthor(recipeId){const {error}=await supabase.from('recipes').update({author_name:$('editAuthor').value.trim()||null}).eq('id',recipeId);$('detailMessage').textContent=error?'Chyba: '+error.message:'Autor bol uložený pre všetkých.';if(!error)await loadCloudData()}
 async function uploadExtraImages(recipeId,files){if(!files?.length)return;const msg=$('detailMessage');msg.textContent=`Nahrávam ${files.length} fotografií…`;try{for(const file of files)await uploadGalleryImage(file,recipeId,'food');msg.textContent=`✓ Pridané fotografie: ${files.length}.`;await loadCloudData();openRecipe(recipeId)}catch(e){msg.textContent='Chyba: '+e.message}}
@@ -107,12 +162,13 @@ $('importBtn').onclick=async()=>{if(!currentUser||!localRecipes.length||!confirm
 $('search').oninput=()=>{activeView='recipes';updateNavigation('recipes');render()};$('clearBtn').onclick=()=>{$('search').value='';activeCategory='';activeView='recipes';$('listTitle').textContent='Všetky recepty';$('listLabel').textContent='Naša zbierka';buildCategories();render()};$('allCategoriesBtn').onclick=()=>setCategory('');
 document.querySelectorAll('.nav-item').forEach(btn=>btn.onclick=()=>{const view=btn.dataset.view;if(view==='settings'){$('infoDialog').showModal();return}activeView=view;updateNavigation(view);if(view==='home')window.scrollTo({top:0,behavior:'smooth'});else document.querySelector('.recipes-section').scrollIntoView({behavior:'smooth'});render()});
 function updateNavigation(view){document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.view===view))}
-document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>{const d=b.closest('dialog');d.close();if(d.id==='detail')clearRecipeUrl()});
+$('detail').addEventListener('cancel',()=>clearRecipeUrl());
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installBtn').hidden=false});$('installBtn').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('installBtn').hidden=true}};
 if('serviceWorker' in navigator){
   window.addEventListener('load', async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('sw.js?v=2.0.3',{updateViaCache:'none'});
+      const reg=await navigator.serviceWorker.register('sw.js?v=2.0.6',{updateViaCache:'none'});
       await reg.update();
     }catch(err){console.info('Service worker sa nepodarilo aktualizovať.',err)}
   });

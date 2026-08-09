@@ -1,11 +1,18 @@
-Rodinná kuchárka 2.0.3 Stable
+RODINNÁ KUCHÁRKA 2.0.6 – GALÉRIA + ZDIEĽANIE
 
-Oprava načítania starej verzie:
-- cache-busting pre app.js a style.css,
-- service worker sa aktualizuje bez HTTP cache,
-- hlavná stránka sa načítava zo siete bez starej cache,
-- opravené číslo verzie v informáciách.
+Nové:
+- v detaile receptu je tlačidlo „Zdieľať recept“
+- na mobile otvorí systémové zdieľanie (WhatsApp, SMS, e-mail atď.)
+- ak systémové zdieľanie nie je dostupné, odkaz sa skopíruje do schránky
+- každý cloudový recept má priamy odkaz vo formáte ?recept=ID
+- po otvorení odkazu sa daný recept automaticky otvorí
+- galéria viacerých fotografií zostáva zachovaná
 
-Na GitHub nahraď súbory index.html, app.js, style.css a sw.js v koreňovom priečinku webu.
+SQL netreba meniť.
 
-Oprava 2.0.5: ďalšie fotografie sa ukladajú kompatibilne s existujúcim databázovým obmedzením, bez potreby meniť SQL.
+Na GitHub nahraj:
+index.html
+app.js
+style.css
+sw.js
+README.txt
